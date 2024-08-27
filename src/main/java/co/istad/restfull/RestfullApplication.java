@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -29,27 +32,29 @@ public class RestfullApplication implements CommandLineRunner {
         SpringApplication.run(RestfullApplication.class, args);
     }
 
+
     @Override
     public void run(String... args) throws Exception {
-        Post post = Post.builder()
-                .userId(1)
-                .id(1)
-                .title("title")
-                .body("body")
-                .build();
 
-        categoryService.getCategories().subscribe(categories -> {
-            log.info("categories: {}", categories);
-        });
+        // asynchronous
+//        categoryService.getCategories().subscribe(categories -> {
+//            log.info("categories: {}", categories);
+//        });
 
+//        restClientService.uploadFile();
+        // synchronous
+//       try{
+//           Category category = categoryService.getCategoryById(111111);
+//           log.info("category synchronous: {}", category);
+//       }catch (Exception e){
+//           log.error("Error: {}", e.getMessage());
+//       }
 
-        Category category = categoryService.getCategoryById(5);
-        log.info("category synchronous: {}", category);
+        MultiValueMap<String, Object> file = new LinkedMultiValueMap<>();
+        file.add("file", new FileSystemResource("src/main/resources/static/pkce.png"));
 
-
-//        ResponseEntity<Category> categoryResponseEntity = categoryService.deleteCategory(1);
-//        log.info("categoryResponseEntity: {}", categoryResponseEntity);
-//        log.info("categoryResponseEntity body: {}", categoryResponseEntity.getBody());
-//        log.info("categoryResponseEntity status code: {}", categoryResponseEntity.getStatusCode());
+        ResponseEntity<?> response = categoryService.uploadFile(file);
+        log.info("response: {}", response);
+        log.info("response: {}", response.getStatusCode());
     }
 }

@@ -80,7 +80,6 @@ public class RestClientServiceImpl {
     }
 
     public void uploadFile() {
-
         MultiValueMap<String, Object> file = new LinkedMultiValueMap<>();
         file.add("file", new FileSystemResource("src/main/resources/static/pkce.png"));
 
@@ -94,8 +93,6 @@ public class RestClientServiceImpl {
         log.info("post body: {}", response.getBody());
         log.info("post headers: {}", response.getHeaders());
         log.info("post status code: {}", response.getStatusCode());
-        log.info("post response: {}", response);
-
     }
 
     public void errorHandling() {
